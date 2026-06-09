@@ -102,20 +102,19 @@ export async function updateInvoice(
   redirect('/dashboard/invoices');
 }
 
-export async function deleteInvoice(id: string) {
-    try{ 
-      await sql`
-        DELETE FROM invoices
-        WHERE id = ${id}
-      `;
-    } catch (error) {
-    console.error('Error deleting invoice:', error);
-    return {
-      message: 'Database Error: Failed to Delete Invoice.',
-    };
-  }
+export async function deleteInvoice(id: string, _formData?: FormData) {
+  try {
+    await sql`
+      DELETE FROM invoices
+      WHERE id = ${id}
+    `;
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices');
+  } catch (error) {
+    console.error('Error deleting invoice:', error);
+    // Return void so this function matches the expected form action signature
+    // and TypeScript expects `void | Promise<void>` as the return type.
+  }
 }
 
 export async function authenticate(
